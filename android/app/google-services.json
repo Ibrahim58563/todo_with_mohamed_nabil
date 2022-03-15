@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "570746792513",
+    "project_id": "todo-with-mohamed-nabil",
+    "storage_bucket": "todo-with-mohamed-nabil.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570746792513:android:79c80242d86455782074c0",
+        "android_client_info": {
+          "package_name": "com.example.todo_with_mohamed_nabil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "570746792513-2o3klt0f9dq10ch01ob41rlk2md0a0dp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_aGju6T1nlUOBZoipJJu8tyt9UGyiPPM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "570746792513-2o3klt0f9dq10ch01ob41rlk2md0a0dp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

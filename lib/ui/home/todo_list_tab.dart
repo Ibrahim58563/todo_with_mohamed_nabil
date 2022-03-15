@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:todo_with_mohamed_nabil/data/FireStoreUtils.dart';
+import 'package:todo_with_mohamed_nabil/data/Todo.dart';
+import 'package:todo_with_mohamed_nabil/extensions.dart';
+import 'package:todo_with_mohamed_nabil/ui/home/todo_widget.dart';
 
 class TodoListTab extends StatefulWidget {
   @override
@@ -67,57 +72,30 @@ class _TodoListTabState extends State<TodoListTab> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemBuilder: (buildContext, index) {
-                return Container(
-                  width: double.infinity,
-                  height: 120,
-                  padding: EdgeInsets.all(12),
-                  margin: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 2,
-                        height: 60,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Title',
-                                style: Theme.of(context).textTheme.subtitle1,
-                              ),
-                              Text('SubTitle',
-                                  style: Theme.of(context).textTheme.subtitle2),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(Icons.check),
-                      ),
-                    ],
-                  ),
+              child: StreamBuilder<QuerySnapshot<Todo>>(
+            stream: getTodosCollectionWithConverter()
+                .where('dateTime', isEqualTo: selectedDay.getDateOnly)
+                .snapshots(),
+            builder: (BuildContext buildContext,
+                AsyncSnapshot<QuerySnapshot<Todo>> snapshot) {
+              if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
-              },
-              itemCount: 20,
-            ),
-          ),
+              }
+              List<Todo> items =
+                  snapshot.data!.docs.map((el) => el.data()).toList();
+              return ListView.builder(
+                itemBuilder: (buildContext, index) {
+                  return TodoWidget(items[index]);
+                },
+                itemCount: items.length,
+              );
+              ;
+            },
+          )),
         ],
       ),
     );

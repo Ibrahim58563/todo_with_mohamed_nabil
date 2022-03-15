@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:todo_with_mohamed_nabil/data/FireStoreUtils.dart';
+import 'package:todo_with_mohamed_nabil/data/Todo.dart';
 
 class TodoWidget extends StatefulWidget {
+  Todo item;
+  TodoWidget(this.item);
+
   @override
   State<TodoWidget> createState() => _TodoWidgetState();
 }
@@ -21,7 +27,7 @@ class _TodoWidgetState extends State<TodoWidget> {
         children: [
           // A SlidableAction can have an icon and/or a label.
           SlidableAction(
-            onPressed: onPressed,
+            onPressed: () {},
             backgroundColor: Color(0xFFFE4A49),
             foregroundColor: Colors.white,
             icon: Icons.delete,
@@ -86,10 +92,10 @@ class _TodoWidgetState extends State<TodoWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Title',
+                      item.title,
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
-                    Text('SubTitle',
+                    Text(item.description,
                         style: Theme.of(context).textTheme.subtitle2),
                   ],
                 ),
@@ -109,5 +115,31 @@ class _TodoWidgetState extends State<TodoWidget> {
     );
   }
 
-  void onPressed(buildContext) {}
+  void showMessage(String message) {
+    showDialog(
+        context: context,
+        builder: (buildContext) {
+          return AlertDialog(
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(buildContext);
+                },
+                child: Text("ok"),
+              ),
+            ],
+          );
+        });
+  }
+
+  void onPressed(Todo item, buildContext) {
+    deleteTodo(item).then((value) {
+      showMessage("task deleted succesfully");
+    }).onError((error, stackTrace) {
+      showMessage(error.toString());
+    }).timeout(Duration(seconds: 10), onTimeout: () {
+      showMessage("time out");
+    });
+  }
 }
